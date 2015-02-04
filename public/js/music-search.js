@@ -1,5 +1,6 @@
 
 var music_database = {};
+var artist_database = {};
 var is_expanded = {};
 
 // --------------------------------------
@@ -12,7 +13,10 @@ $(document).ready(function() {
         url: "/api/fm/artists.json",
         dataType: "json",
         success: function(json) {
-            console.log(json);
+            artist_database = json;
+
+            create_artist_bar();
+            init_is_expanded(json);
         }
     });
 });
@@ -26,7 +30,276 @@ function init_is_expanded(database) {
 	console.log(is_expanded);
 }
 
+// --------------------------------------
+// --- artist list ---
+// --------------------------------------
+function create_artist_bar() {
+    var tbody = $("tbody");
 
+    for (var _a in artist_database) {
+        var artist = artist_database[_a];
+
+        var artist_tr = $("<tr></tr>")
+            .addClass("artist_bar")
+            .addClass("artist_" + artist.id)
+            .append($("<td></td>")
+                .attr("colspan", 12)
+                .addClass("artist")
+                .text(artist.name)
+            )/*.append($("<td></td>")
+                .addClass("name")
+            ).append($("<td></td>")
+                .addClass("fl")
+            ).append($("<td></td>")
+                .addClass("ob")
+            ).append($("<td></td>")
+                .addClass("cl")
+            ).append($("<td></td>")
+                .addClass("fg")
+            ).append($("<td></td>")
+                .addClass("tp")
+            ).append($("<td></td>")
+                .addClass("tb")
+            ).append($("<td></td>")
+                .addClass("hr")
+            ).append($("<td></td>")
+                .addClass("tuba")
+            ).append($("<td></td>")
+                .addClass("timp")
+            ).append($("<td></td>")
+                .addClass("others")
+            )*/.data("artist", artist.name)
+            .data("artist_id", artist.id);
+
+        tbody.append(artist_tr);
+    }
+
+    $("tbody tr.artist_bar").click(function(idx) {
+        toggle_artist($(this).data("artist_id"));
+//        var search_condition = Array();
+//        search_condition["artist_id"] = $(this).data("artist_id");
+//        do_search_music(search_condition);
+    });
+}
+
+function clear_table() {
+    $("tbody").html("");
+}
+
+function toggle_artist(artist_id) {
+    var artist_bar = $("tr.artist_" + artist_id);
+
+    if (parseInt(artist_bar.data("loaded")) == 1) {
+        do_toggle_artist(artist_id);
+        return;
+    }
+
+    $.ajax({
+        type:"GET",
+        url:"/api/fm/musics.json",
+        dataType:"json",
+        data: {
+            artist_id: artist_id,
+        },
+        success:function(json) {
+            create_artist_song_list(artist_id, json);
+            do_toggle_artist(artist_id);
+        }
+    });
+}
+
+function create_artist_song_list(artist_id, songs) {
+    var artist_bar = $("tr.artist_" + artist_id);
+    var artist_name = artist_bar.data("artist");
+
+    for (var _a in songs) {
+        for(var _s in songs[_a]) {
+        var song = songs[_a][_s];
+
+        artist_bar.after(
+            $("<tr></tr>")
+                .addClass("artist_" + artist_id + "_song")
+                .addClass(is_expanded[artist_name]?"":"hide")
+                .data("artist_id", song.artist_id)
+                .data("artist", artist_name)
+                .data("name", song.name)
+                .data("fl", song.fl)
+                .data("ob", song.ob)
+                .data("cl", song.cl)
+                .data("fg", song.fg)
+                .data("tp", song.tp)
+                .data("tb", song.tb)
+                .data("hr", song.hr)
+                .data("tuba", song.tuba)
+                .data("timp", song.timp)
+                .data("others", song.others)
+                .append(
+                    $("<td></td>")
+                    .addClass("artist")
+                    .text(artist_name)
+                ).append($("<td></td>")
+                    .addClass("name")
+                    .text(song.name)
+                ).append($("<td></td>")
+                    .addClass("fl")
+                    .text(song.fl)
+                ).append($("<td></td>")
+                    .addClass("ob")
+                    .text(song.ob)
+                ).append($("<td></td>")
+                    .addClass("cl")
+                    .text(song.cl)
+                ).append($("<td></td>")
+                    .addClass("fg")
+                    .text(song.fg)
+                ).append($("<td></td>")
+                    .addClass("tp")
+                    .text(song.tp)
+                ).append($("<td></td>")
+                    .addClass("tb")
+                    .text(song.tb)
+                ).append($("<td></td>")
+                    .addClass("hr")
+                    .text(song.hr)
+                ).append($("<td></td>")
+                    .addClass("tuba")
+                    .text(song.tuba)
+                ).append($("<td></td>")
+                    .addClass("timp")
+                    .text(song.timp)
+                ).append($("<td></td>")
+                    .addClass("others")
+                    .text(song.others)
+                )
+            );
+    }}
+
+    artist_bar.data("loaded", 1);
+
+}
+
+function do_toggle_artist(artist_id) {
+    $("tr.artist_" + artist_id + "_song").toggleClass("hide");
+    is_expanded[artist_database[artist_id].name] = !is_expanded[artist_database[artist_id].name];
+}
+
+function do_search_music(search_condition) {
+    console.log(search_condition.artista);
+    $.ajax({
+        type:"GET",
+        url:"/api/fm/musics.json",
+        dataType:"json",
+        data: {
+            artist_id: search_condition.artist_id,
+            artist: search_condition.artist,
+            name:   search_condition.name,
+            fl:     search_condition.fl,
+            ob:     search_condition.ob,
+            cl:     search_condition.cl,
+            fg:     search_condition.fg,
+            tp:     search_condition.tp,
+            tb:     search_condition.tb,
+            hr:     search_condition.hr,
+            tuba:   search_condition.tuba,
+            timp:   search_condition.timp,
+            others: search_condition.others,
+        },
+        success:function(json) {
+            clear_table();
+            show_search_result(json);
+        }
+    });
+}
+
+function show_search_result(songs) {
+    create_song_list(songs);
+}
+
+function create_song_list(songs) {
+    var tbody = $("tbody");
+
+    for (var _a in songs) {
+        var artist_bar = $("<tr></tr>");
+        artist_bar.append($("<td></td>")
+            .text(artist_database[_a].name)
+            .attr("colspan", 12)
+        ).addClass("artist_bar")
+         .addClass("artist_" + _a)
+         .data("artist_id", _a);
+
+        tbody.append(artist_bar);
+        var song_cnt = 0;
+        for(var _s in songs[_a]) {
+            var song = songs[_a][_s];
+
+            song_cnt++;
+
+            artist_bar.after(
+                $("<tr></tr>")
+                    .addClass("artist_" + _a + "_song")
+                    .addClass("song")
+                    .addClass("hide")
+                    .data("artist_id", song.artist_id)
+                    .data("artist", artist_database[_a].name)
+                    .data("name", song.name)
+                    .data("fl", song.fl)
+                    .data("ob", song.ob)
+                    .data("cl", song.cl)
+                    .data("fg", song.fg)
+                    .data("tp", song.tp)
+                    .data("tb", song.tb)
+                    .data("hr", song.hr)
+                    .data("tuba", song.tuba)
+                    .data("timp", song.timp)
+                    .data("others", song.others)
+                    .append(
+                        $("<td></td>")
+                        .addClass("artist")
+                        .text(artist_database[_a].name)
+                    ).append($("<td></td>")
+                        .addClass("name")
+                        .text(song.name)
+                    ).append($("<td></td>")
+                        .addClass("fl")
+                        .text(song.fl)
+                    ).append($("<td></td>")
+                        .addClass("ob")
+                        .text(song.ob)
+                    ).append($("<td></td>")
+                        .addClass("cl")
+                        .text(song.cl)
+                    ).append($("<td></td>")
+                        .addClass("fg")
+                        .text(song.fg)
+                    ).append($("<td></td>")
+                        .addClass("tp")
+                        .text(song.tp)
+                    ).append($("<td></td>")
+                        .addClass("tb")
+                        .text(song.tb)
+                    ).append($("<td></td>")
+                        .addClass("hr")
+                        .text(song.hr)
+                    ).append($("<td></td>")
+                        .addClass("tuba")
+                        .text(song.tuba)
+                    ).append($("<td></td>")
+                        .addClass("timp")
+                        .text(song.timp)
+                    ).append($("<td></td>")
+                        .addClass("others")
+                        .text(song.others)
+                    )
+                );
+        }
+        artist_bar.data("loaded", 1);
+        artist_bar.find('td').text(artist_database[_a].name + " (" + song_cnt + ")");
+        artist_bar.click(function(idx) {
+            $("tr.artist_" + $(this).data("artist_id") + "_song").toggleClass("hide");
+        });
+    }
+
+}
 
 
 // --------------------------------------
@@ -141,49 +414,18 @@ function update_table(obj) {
 }
 
 function search() {
-	var searchCondition = Array();
+	var search_condition = Array();
 
 	$("input.instr").each(function(idx) {
 		var val = $(this).val();
 		if(val != ""){
-			searchCondition[$(this).attr("id")] = val;
+			search_condition[$(this).attr("id")] = val;
 		}
 	});
 
-	var filtered_data = {}
 
-	// Each artist
-    for (var artist in music_database) {
-		filtered_data[artist] = [];
+    do_search_music(search_condition);
 
-		// Each music
-        for (var music in music_database[artist]) {
-			var isMached = true;
-			// Filter
-			for (var condition in searchCondition) {
-				if (music_database[artist][music][condition] != searchCondition[condition]) {
-					isMached = false;
-					break;
-				}
-			}
-
-			if( isMached ){
-				filtered_data[artist].push(music_database[artist][music]);
-			}
-		}
-	}
-
-	var delete_key = [];
-	for (var artist in filtered_data) {
-		if(filtered_data[artist].length == 0) {
-			delete_key.push(artist);
-		}
-	}
-	for (var key in delete_key) {
-		delete filtered_data[delete_key[key]];
-	}
-
-	update_table(filtered_data);
 }
 
 
@@ -221,13 +463,13 @@ function toggle_each(artist_name, song_count) {
         toggle_each(artist_name, song_count+1);
 //        setTimeout("toggle_each(\"" + artist_name + "\", " + parseInt(song_count + 1) + ")", 5);
 }
-
+/*
 function toggle_artist(artist_name) {
 	is_expanded[artist_name] = !is_expanded[artist_name];
     toggle_each(artist_name, 0);
 //    setTimeout("toggle_each(\"" + artist_name + "\", 0)", 5);
 }
-
+*/
 
 function check_unset(_input, event, ui) {
     var now_val = $(_input).val();

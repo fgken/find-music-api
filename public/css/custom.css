@@ -93,3 +93,9 @@ th.others {
     width: 290px;
 }
 
+
+tr.artist_bar td {
+    font-weight: bold;
+    text-align: center;
+}
+
