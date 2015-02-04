@@ -1,3 +1,10 @@
+#find-music-api
+
+## How To Install
+php oil refine install
+
+php oil refine migrate
+
 #FuelPHP
 
 * Version: 1.7
