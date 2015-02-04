@@ -415,16 +415,23 @@ function update_table(obj) {
 
 function search() {
 	var search_condition = Array();
+    var check = false;
 
 	$("input.instr").each(function(idx) {
 		var val = $(this).val();
 		if(val != ""){
 			search_condition[$(this).attr("id")] = val;
+            check = true;
 		}
 	});
 
-
-    do_search_music(search_condition);
+    
+    if (check) {
+        do_search_music(search_condition);
+    } else {
+        clear_table();
+        create_artist_bar();
+    }
 
 }
 
