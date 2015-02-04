@@ -1,0 +1,95 @@
+body {
+	padding-top: 50px;
+}
+
+span.hitcount {
+	color: black;
+}
+
+span.error {
+	color: red;
+}
+
+label {
+	width: 80px;
+	text-align: right;
+}
+
+label[for=artist] {
+	width: 100px !important;
+}
+
+input.spinner {
+	width: 30px;
+}
+
+input#others {
+	width: 330px;
+}
+
+input#artist {
+	width: 400px;
+}
+input#name {
+	width: 400px;
+}
+
+input.unset {
+	font-size: 10px;
+}
+
+div.second-line {
+	margin-top: 5px;
+}
+
+
+th.artist {
+    width: 100px;
+}
+
+th.name {
+    width: 400px;
+}
+
+th.fl {
+    width: 30px;
+}
+
+th.ob {
+    width: 30px;
+}
+
+th.cl {
+    width: 30px;
+}
+
+th.fg {
+    width: 30px;
+}
+
+th.tp { 
+    width: 30px;
+}
+
+th.tb {
+    width: 30px;
+}
+
+th.hr {
+    width: 30px;
+}
+
+th.tuba {
+    width: 50px;
+}
+
+th.timp {
+    width: 50px;
+}
+
+th.others {
+    max-width: 290px;
+    min-width: 290px;
+    width: 290px;
+}
+
