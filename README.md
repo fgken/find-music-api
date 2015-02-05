@@ -3,7 +3,13 @@
 ## How To Install
 php oil refine install
 
-php oil refine migrate
+php oil refine migrate:current
+
+## Staging Environment
+
+https://staging.apove.net/
+
+Authentication is required.
 
 #FuelPHP
 
