@@ -24,7 +24,7 @@
 
 <body>
   <div class="container">
-    <h1>オーケストラの楽曲検索</h1>
+    <h1>オーケストラの楽曲検索(管理画面)</h1>
   </div>
 
   <div class="container">
@@ -73,6 +73,20 @@
           <button id="clear" type="button" class="btn-warning hide">検索条件をクリア</button>
       </div>
     </div>
+
+    <span>状態</span>
+    <div class="form-inline form-group">
+        <div class="form-group">
+            <label for="status">状態</label>
+            <select id="status" name="status" multiple="multiple">
+                <option value="1000">公開</option>
+                <option value="900">非公開</option>
+                <option value="500">未承認</option>
+                <option value="100">却下</option>
+            </select>
+            <button id="show_only_unapproved" type="button" class="btn">未承認のみ表示</button>
+            <button id="show_only_private" type="button" class="btn">非公開のみ表示</button>
+        </div>
   </div>
   </div>
 
@@ -89,8 +103,8 @@
 	  </div>
 	  <div id="navbar" class="collapse navbar-collapse">
 	    <ul class="nav navbar-nav">
-		  <li class="active"><a href="#">Home</a></li>
-          <li><a href="/admin.php">管理</a></li>
+		  <li><a href="/index.php">Home</a></li>
+          <li class="active"><a href="/admin.php">管理</a></li>
 		  <li><a href="#about">About</a></li>
 		  <li><a href="#contact">Contact</a></li>
 		</ul>
@@ -106,8 +120,9 @@
     <table class="instrumentation-table table table-striped">
       <thead>
         <tr>
+          <th class="status">状態</th>
           <th class="artist">作曲者</th>
-          <th class="name">曲名</th>
+          <th class="name-small">曲名</th>
           <th class="fl">Fl</th>
           <th class="ob">Ob</th>
           <th class="cl">Cl</th> <!-- Bb or A -->
@@ -117,12 +132,60 @@
           <th class="hr">Hr</th>
           <th class="tuba">Tuba</th>
           <th class="timp">Timp</th>
-          <th class="others">Others</th>
+          <th class="others-small">Others</th>
+          <th class="">操作</th>
           <!-- Picc, E.Hr, Bs.Cl, C.Fg, Harp, Celesta, Perc -->
         </tr>
       </thead>
 	  <tbody>
-
+        <tr>
+          <td class="status">未承認</td>
+          <td class="artist">Fizz</td>
+          <td class="name-small">Buzz</td>
+          <td class="fl">1</td>
+          <td class="ob">2</td>
+          <td class="cl">3</td> <!-- Bb or A -->
+          <td class="fg">4</td>
+          <td class="tp">5</td>
+          <td class="tb">6</td>
+          <td class="hr">7</td>
+          <td class="tuba">8</td>
+          <td class="timp">9</td>
+          <td class="others-small">Otders</td>
+          <td class=""><button class="btn"  type="button">承認</button><button class="btn" type="button">削除</button></td>
+        </tr>
+        <tr>
+          <td class="status">公開</td>
+          <td class="artist">Fizz</td>
+          <td class="name-small">Buzz</td>
+          <td class="fl">1</td>
+          <td class="ob">2</td>
+          <td class="cl">3</td> <!-- Bb or A -->
+          <td class="fg">4</td>
+          <td class="tp">5</td>
+          <td class="tb">6</td>
+          <td class="hr">7</td>
+          <td class="tuba">8</td>
+          <td class="timp">9</td>
+          <td class="others-small">Otders</td>
+          <td class=""><button class="btn" type="button">非公開</button></td>
+        </tr>
+        <tr>
+          <td class="status">非公開</td>
+          <td class="artist">Fizz</td>
+          <td class="name-small">Buzz</td>
+          <td class="fl">1</td>
+          <td class="ob">2</td>
+          <td class="cl">3</td> <!-- Bb or A -->
+          <td class="fg">4</td>
+          <td class="tp">5</td>
+          <td class="tb">6</td>
+          <td class="hr">7</td>
+          <td class="tuba">8</td>
+          <td class="timp">9</td>
+          <td class="others-small">Otders</td>
+          <td class=""><button class="btn"  type="button">公開</button></td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -133,8 +196,12 @@
   <script src="./js/bootstrap-3.3.2.min.js"></script>
   <!-- -->
   <script src="./js/jquery-ui-1.11.2.js"></script>
+
+  <script src="./component/select2/select2.js"></script>
+
+  <link rel="stylesheet" href="./component/select2/select2.css" />
   <!-- Find music script -->
-  <script src="./js/music-search.js"></script>
+  <script src="./js/music-admin.js"></script>
 
 </body>
 

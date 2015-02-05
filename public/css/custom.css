@@ -47,6 +47,10 @@ th.artist {
     width: 100px;
 }
 
+th.name-small {
+    width: 250px;
+}
+
 th.name {
     width: 400px;
 }
@@ -86,6 +90,15 @@ th.tuba {
 th.timp {
     width: 50px;
 }
+
+th.others-small {
+    min-width: 200px;
+}
+
+th.control {
+    width: 100px;
+}
+
 
 th.others {
     max-width: 290px;

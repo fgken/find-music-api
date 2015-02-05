@@ -19,7 +19,7 @@
  * @package  app
  * @extends  Controller
  */
-class Controller_Fm extends Controller_Rest
+class Controller_Admin extends Controller_Rest
 {
     public function get_artists()
     {
@@ -41,7 +41,11 @@ class Controller_Fm extends Controller_Rest
         $responseData = array();
         $whereArray = array();
 
-        $whereArray[] = array('status', '=', 1000); // FIXME
+
+        $song_status = Input::get('status');
+        if (isset($song_status)) {
+            $whereArray[] = array('status', '=', $song_status);
+        }
 
         $artist_id = Input::get('artist_id');
         if (isset($artist_id)) {
