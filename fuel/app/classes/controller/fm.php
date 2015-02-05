@@ -96,6 +96,11 @@ class Controller_Fm extends Controller_Rest
             $whereArray[] = array('name', 'like', "%$name%");
         }
 
+        $others = Input::get('others');
+        if (isset($others)) {
+            $whereArray[] = array('others', 'like', "%$others%");
+        }
+
         $artist = Input::get('artist');
 
 
