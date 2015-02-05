@@ -7,7 +7,7 @@ php oil refine migrate:current
 
 ## Staging Environment
 
-https://staging.apove.net/
+http://staging.apove.net/
 
 Authentication is required.
 
